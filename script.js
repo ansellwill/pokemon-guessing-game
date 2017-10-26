@@ -15,27 +15,66 @@ var pokemon = [
   { name: 'Zapdos', image:'images/zapdos.png' },
   { name: 'Pidgey', image:'images/pidgey.png' }
 ];
-
+var pickedPokemon
+var difficulty = 6;
 
 var square = document.querySelectorAll(".square");
 var messageDisplay = document.querySelector("#message")
-var title = document.querySelector("h1");
+var title = document.querySelector("h2");
+var resetButton = document.querySelector("#reset");
+var easybtn = document.querySelector("#easybtn");
+var hardbtn = document.querySelector("#hardbtn");
+
+easybtn.addEventListener("click", function(){
+  hardbtn.classList.remove("selected");
+  easybtn.classList.add("selected");
+}
+)
+
+hardbtn.addEventListener("click", function(){
+  easybtn.classList.remove("selected");
+  hardbtn.classList.add("selected");
+}
+)
+
+resetButton.addEventListener("click", function(){
+  arr = [];
+  resetButton.textContent = "New Pokemon";
+  generateNumberLine();
+  selectPokemon();
+  for(var i = 0; i < square.length; i++){
+  square[i].style.backgroundImage = "url(" + pokemon[arr[i]].image + ")";
+    }
+  }
+)
+
+
+
  // Make an array of random numbers with no repeats
-var arr = []
-while(arr.length < 6){
-    var randomnumber = Math.floor(Math.random()*15)
-    if(arr.indexOf(randomnumber) > -1) continue;
-    arr[arr.length] = randomnumber;
+var arr = [];
+function generateNumberLine(){
+while(arr.length < difficulty){
+    var randomNumberLine = Math.floor(Math.random()* pokemon.length)
+    if(arr.indexOf(randomNumberLine) > -1) continue;
+    arr[arr.length] = randomNumberLine;
+  }
 }
 
-var randomNumber = Math.floor(Math.random() * 6);
-var pickedPokemon = "url(\"" + pokemon[arr[randomNumber]].image + "\")";
-var pickedPokemonName = pokemon[arr[randomNumber]].name;
-title.textContent = pickedPokemonName;
+generateNumberLine();
+
+function selectPokemon() {
+  var randomNumber = Math.floor(Math.random() * arr.length);
+  pickedPokemon = "url(\"" + pokemon[arr[randomNumber]].image + "\")";
+  var pickedPokemonName = pokemon[arr[randomNumber]].name;
+  title.textContent = pickedPokemonName;
+}
+selectPokemon();
 
  // Use random numbers to select pokemon images
+
 for(var i = 0; i < square.length; i++){
   square[i].style.backgroundImage = "url(" + pokemon[arr[i]].image + ")";
+
 
 
   //add click listeners to squares
@@ -45,6 +84,7 @@ for(var i = 0; i < square.length; i++){
     // Compare Pokemon to clicked image
   if (clickedPokemon === pickedPokemon) {
     messageDisplay.textContent = "Correct";
+    resetButton.textContent = "Play Again?";
     changePokemon();
   } else {
     this.style.backgroundImage = "none";
@@ -53,7 +93,7 @@ for(var i = 0; i < square.length; i++){
   });
 }
 
-function changePokemon(pokemon){
+function changePokemon(){
   //Loop through all squares
   for(var i = 0; i < square.length; i++){
   //Change each to the given Pokemon
