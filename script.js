@@ -17,16 +17,46 @@ var pokemon = [
 ];
 
 
-var square = document.querySelectorAll(".square")
-
-var pickedColor = "Charmander"
-
-
-
-for(var i = 0; i < square.length; i++){
-  var rand = Math.floor(Math.random() * pokemon.length);
-  square[i].style.backgroundImage = "url(" + pokemon[rand].image + ")";
+var square = document.querySelectorAll(".square");
+var messageDisplay = document.querySelector("#message")
+var title = document.querySelector("h1");
+ // Make an array of random numbers with no repeats
+var arr = []
+while(arr.length < 6){
+    var randomnumber = Math.floor(Math.random()*15)
+    if(arr.indexOf(randomnumber) > -1) continue;
+    arr[arr.length] = randomnumber;
 }
 
+var randomNumber = Math.floor(Math.random() * 6);
+var pickedPokemon = "url(\"" + pokemon[arr[randomNumber]].image + "\")";
+var pickedPokemonName = pokemon[arr[randomNumber]].name;
+title.textContent = pickedPokemonName;
 
-// "url(images/charmander.png)"
+ // Use random numbers to select pokemon images
+for(var i = 0; i < square.length; i++){
+  square[i].style.backgroundImage = "url(" + pokemon[arr[i]].image + ")";
+
+
+  //add click listeners to squares
+  square[i].addEventListener("click",function(){
+    //Get Name of clicked square
+  var clickedPokemon = this.style.backgroundImage;
+    // Compare Pokemon to clicked image
+  if (clickedPokemon === pickedPokemon) {
+    messageDisplay.textContent = "Correct";
+    changePokemon();
+  } else {
+    this.style.backgroundImage = "none";
+    messageDisplay.textContent = "Try Again"
+  }
+  });
+}
+
+function changePokemon(pokemon){
+  //Loop through all squares
+  for(var i = 0; i < square.length; i++){
+  //Change each to the given Pokemon
+  square[i].style.backgroundImage = pickedPokemon;
+  }
+}
